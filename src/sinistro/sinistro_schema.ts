@@ -10,6 +10,7 @@ export const sinistro_schema = new Schema({
        nome_transportadora: {type: String},
        descricao_sinistro: {type: String},
        data_preenchimento: {type: Date},
+       data_sinistro: {type: Date},
        nome_resp_preechimento: {type: String},
        email_resp: {type: String},
        anex_documento: {type: [String]}

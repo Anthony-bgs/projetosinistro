@@ -8,6 +8,7 @@ export interface sinistro {
     nome_transportadora: string,
     descricao_sinistro: string,
     data_preenchimento: Date,
+    data_sinistro: Date,
     nome_resp_preechimento: string,
     email_resp: string,
     anex_documento:[string] 

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { sinistro_service } from './sinistro.service';
-import { sinistrodto } from './sinsitrodto';
+import { sinistrodto } from './sinistrodto';
 import { sinistro } from './sinistro.interface';
 import { get } from 'mongoose';
 
@@ -9,7 +9,7 @@ export class sinistro_controller {
   constructor(private readonly appService: sinistro_service) { }
 
   @Post("/")
-  async create(@Body() createsinistrodto: sinistrodto): Promise<sinistro> {
+  async create(@Body() createsinistrodto: sinistrodto): Promise<string> {
     return this.appService.create(createsinistrodto)
   }
   @Get("findAll")

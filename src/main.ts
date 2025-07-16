@@ -2,12 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { Global_Module } from './global.module';
 import * as mongoose from 'mongoose';
 import * as dotenv from "dotenv";
+ import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(Global_Module);
+
+ app.use(bodyParser.json({ limit: '50mb' })); // Adjust limit as needed
+      app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+
+
+
+
+
+
   app.enableCors({
-    origin: "http://192.168.0.8", // Allowed origins
+    origin: "*", // Allowed origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
     allowedHeaders: 'Content-Type,Accept', // Allowed request headers
     // credentials: false, // Allow sending cookies/authorization headers
