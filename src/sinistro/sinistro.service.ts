@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { sinistro } from './sinistro.interface';
 import { Constantes } from 'src/constantes'
 import { Model } from 'mongoose';
-import { processo_service } from 'src/processo/processo.service';
 import { sinistrodto } from './sinistrodto';
 
 @Injectable()
@@ -10,15 +9,10 @@ export class sinistro_service {
   constructor(
     @Inject(Constantes.modelo_sinistro)
     private sinistro_model: Model<sinistro>,
-    private readonly processo_service: processo_service
   	) { }
     async create(createsinistro: sinistro): Promise<string> {
       const created = new this.sinistro_model(createsinistro);
       await created.save();
-      this.processo_service.create({
-       sinistro: created.id,
-       status: "aberto"
-      })
       return created._id.toString()
     }
     async find(_id: string): Promise<sinistro | null> {
