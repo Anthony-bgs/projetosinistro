@@ -8,7 +8,7 @@ import { Response } from 'express';
 
 @Controller('documentos')
 export class DocumentosController {
-  constructor(private readonly documentosService: DocumentosService) {}
+  constructor(private readonly documentosService: DocumentosService,) {}
 
   @Post()
   @UseInterceptors(FilesInterceptor('file', 10, {
@@ -36,7 +36,7 @@ export class DocumentosController {
   getAll() {
     return this.documentosService.getAllDocumentos();
   }
-  @Get(":id")
+  @Get("get/:id")
   async getFile(@Param("id") id: string, @Res() res: Response) {
     const filePath = await this.documentosService.getDocumentoPath(id);
     if (!filePath) {

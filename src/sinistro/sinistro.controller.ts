@@ -7,7 +7,7 @@ import { RolesInterceptor } from 'src/autenticacao/regra.interceptor';
 import { Roles } from 'src/autenticacao/regra.decorator';
 import { Regras_Perfil } from 'src/constantes';
 import { get } from 'mongoose';
-import { EmailService } from 'src/email/email.service';
+import { EmailService } from 'src/comunicacao/email.service';
 
 
 @Controller("sinistro")
