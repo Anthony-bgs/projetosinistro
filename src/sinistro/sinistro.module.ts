@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
-import { sinistro_controller} from './sinistro.controller';
-import { sinistro_service} from './sinistro.service';
-import { DatabaseModule } from 'src/database/db.module';
-import { sinistroprovider } from './sinistro.provider';
+import { Sinistro_Controller} from './sinistro.controller';
+import { Sinistro_Service} from './sinistro.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Sinistro_Schema } from './sinistro.schema';
+import { EmailService } from 'src/email/email.service';
 
 @Module({
-  imports: [DatabaseModule],
-  controllers: [sinistro_controller],
-  providers: [sinistro_service,...sinistroprovider,],
+  imports: [
+    MongooseModule.forFeature([{ name: 'Sinistro', schema: Sinistro_Schema }]),
+  ],
+  controllers: [Sinistro_Controller],
+  providers: [Sinistro_Service, EmailService],
+  exports: [Sinistro_Service, MongooseModule],
 })
-export class sinistro_module {}
+export class Sinistro_Module {}

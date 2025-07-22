@@ -15,7 +15,7 @@ export class RolesInterceptor implements NestInterceptor {
   constructor(private reflector: Reflector) { }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const requiredRoles = this.reflector.getAllAndOverride<string>(
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
@@ -24,8 +24,8 @@ export class RolesInterceptor implements NestInterceptor {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-
-    if (!user || user.perfil !== requiredRoles) {
+  
+    if (!user || !requiredRoles.includes(user.perfil)) {
       throw new ForbiddenException('Acesso negado: perfil insuficiente');
     }
       return next.handle();

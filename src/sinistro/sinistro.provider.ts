@@ -1,11 +1,11 @@
 import { Connection } from 'mongoose';
-import { sinistro_schema } from './sinistro_schema';
+import { Sinistro_Schema } from './sinistro.schema';
 import { Constantes } from 'src/constantes';
 
 
-export const sinistroprovider = [
+export const Sinistro_Provider = [
   {
     provide: Constantes.modelo_sinistro,
-    useFactory: (connection: Connection) => connection.model('sinistro', sinistro_schema),
+    useFactory: (connection: Connection) => connection.model('sinistro', Sinistro_Schema),
     inject: [Constantes.dataBaseConnection],},
 ];

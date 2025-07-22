@@ -1,18 +1,17 @@
 import { Document } from 'mongoose';
 import { Tipo_de_documento } from './sinistro.interface';
 
-export interface sinistrodto extends Document{
-    nome_motorista: string,
-    tipo_de_documento: Tipo_de_documento,
-    documento: string,
-    placa_veiculo: string,
-    numero_tel: string,
-    nome_transportadora: string,
-    descricao_sinistro: string,
-    data_preenchimento: Date,
-    data_sinistro: Date,
-    nome_resp_preechimento: string,
-    email_resp: string,
-    anex_documento:[string] 
-
+export interface Sinistro_Dto extends Document {
+  tipo_documento: Tipo_de_documento,
+  numero_documento: string,
+  nome_motorista: string,
+  placa_veiculo: string,
+  numero_telefone: string,
+  nome_transportadora: string,
+  data_sinistro: Date,
+  descricao_sinistro: string,
+  responsavel_nome_preechimento: string,
+  responsavel_email_preenchimento: string,
+  data_preenchimento: Date,
+  documentos_anexo: string[]
 }

@@ -1,23 +1,22 @@
 import mongoose, { Schema } from "mongoose";
 import { ref } from "process";
 
-export const sinistro_schema = new Schema({
-       nome_motorista: {type: String},
-       tipo_de_documento: {type: String},
-       documento: {type: String},
-       placa_veiculo: {type: String},
-       numero_tel: {type: String},
-       nome_transportadora: {type: String},
-       descricao_sinistro: {type: String},
-       data_preenchimento: {type: Date},
-       data_sinistro: {type: Date},
-       nome_resp_preechimento: {type: String},
-       email_resp: {type: String},
-       anex_documento: {type: [String]}
-   
+export const Sinistro_Schema = new Schema({
+  tipo_documento: { type: String },
+  numero_documento: { type: String },
+  nome_motorista: { type: String },
+  placa_veiculo: { type: String },
+  numero_telefone: { type: String },
+  nome_transportadora: { type: String },
+  data_sinistro: { type: Date },
+  descricao_sinistro: { type: String },
+  responsavel_nome_preechimento: { type: String },
+  responsavel_email_preenchimento: { type: String },
+  data_preenchimento: { type: Date },
+  documentos_anexo: { type: [String]  }
 },
-
-    {
-        timestapms: true,
-        collection: "Sinistro"
-    })
+  {
+    timestamps: true,
+    collection: "Sinistro"
+  }
+)
