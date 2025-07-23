@@ -25,10 +25,16 @@ export class DocumentosService {
   
   async deleteDocumento(id: string): Promise<boolean> {
     const filePath = path.join(this.uploadsPath, id);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    try {
+      await fs.promises.unlink(filePath);
       return true;
+    } catch (err: any) {
+      if (err.code === 'ENOENT') {
+        // Arquivo já não existe, considerar como sucesso
+        return false;
+      }
+      console.error('Erro ao deletar arquivo:', err);
+      throw err;
     }
-    return false;
   }
 }
