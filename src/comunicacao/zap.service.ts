@@ -11,7 +11,8 @@ export class ZapService {
     constructor() { }
 
     async sendWhatsappMessage(numero: string, mensagem: string) {
-        const token = '';
+        const token = process.env.WHATSAPP_TOKEN;
+        const phoneNumberId = process.env.WHATSAPP_PHONE_ID;
         const url = `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`;
         await axios.post(
             url,

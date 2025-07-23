@@ -14,7 +14,7 @@ export enum Status_Usuario{
     inativo = "inativo",
 };
 export const jwtConstants = {
-  secret: "FSDIOHNGFHGI",
+  secret: process.env.JWT_SECRET,
 };
 export enum Regras_Perfil {
 admin = "admin",

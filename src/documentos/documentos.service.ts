@@ -6,8 +6,8 @@ import * as path from 'path';
 export class DocumentosService {
   private uploadsPath = path.resolve(__dirname, '../../uploads');
 
-  saveDocumento(id: string, filename: string) {
-    // Mantém compatibilidade, mas não faz nada (opcional)
+  saveDocumento(id: string) {
+    // aqui você vai adicionar lógica para salvar o idDocumento no banco de dados para rastreabilidade
   }
 
   async getDocumentoPath(id: string): Promise<string | null> {
@@ -21,5 +21,14 @@ export class DocumentosService {
   getAllDocumentos() {
     if (!fs.existsSync(this.uploadsPath)) return [];
     return fs.readdirSync(this.uploadsPath).map(filename => ({ id: filename }));
+  }
+  
+  async deleteDocumento(id: string): Promise<boolean> {
+    const filePath = path.join(this.uploadsPath, id);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      return true;
+    }
+    return false;
   }
 }

@@ -7,20 +7,20 @@ export class EmailService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      service: 'gmail', // ou 'hotmail', 'outlook', etc.
+      service: process.env.EMAIL_SERVICE,
       auth: {
-        user: '@gmail.com',      // coloque seu e-mail real aqui
-        pass: '   ', // use senha de app, não a senha normal do Gmail
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
   }
 
   async sendMail(to: string, subject: string, text: string){
     const info = await this.transporter.sendMail({
-      from: '"Sistema Sinistro" <.com>',
+      from: process.env.EMAIL_FROM,
       to,
       subject,
-      text, 
+      text,
     });
     return info; // Retorna informações do envio
   }
