@@ -5,9 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Sinistro_Schema } from './sinistro.schema';
 import { EmailService } from 'src/comunicacao/email.service';
 import { ZapService } from 'src/comunicacao/zap.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     MongooseModule.forFeature([{ name: 'Sinistro', schema: Sinistro_Schema }]),
   ],
   controllers: [Sinistro_Controller],

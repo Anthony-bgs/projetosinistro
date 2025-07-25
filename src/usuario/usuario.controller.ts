@@ -14,7 +14,13 @@ export class Usuario_Controller {
   }
   @Post("/")
   @Roles(Regras_Perfil.admin)
-  async create(@Body() createusuariodto: Usuario_Dto): Promise<string> {
+  async create(@Body() createusuariodto: Usuario_Dto): Promise<any> {
     return this.appService.create(createusuariodto)
+  }
+
+  // Endpoint para validar código 2FA na criação de usuário
+  @Post("/validar")
+  async validar2fa(@Body() body: { email: string, codigo: string }): Promise<string> {
+    return this.appService.validarCodigo2FA(body.email, body.codigo);
   }
 }

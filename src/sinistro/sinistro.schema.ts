@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Status_Sinistro } from "src/constantes";
 
 export const Sinistro_Schema = new Schema({
   tipo_documento: { type: String },
@@ -12,7 +13,10 @@ export const Sinistro_Schema = new Schema({
   responsavel_nome_preechimento: { type: String },
   responsavel_email_preenchimento: { type: String },
   data_preenchimento: { type: Date },
-  documentos_anexo: { type: [String] }
+  documentos_anexo: { type: [String] },
+  status: {
+    type: String, enum: Status_Sinistro, default: Status_Sinistro.aberto
+  }
 },
   {
     timestamps: true,

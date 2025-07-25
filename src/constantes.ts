@@ -20,4 +20,13 @@ export enum Regras_Perfil {
 admin = "admin",
 cliente = "cliente",
 operador = "operador"
+};
+export enum Status_Sinistro{
+aberto = "aberto", 
+em_analise = "em_analise", 
+pendente = "pendente", 
+em_espera = "em_espera", 
+concluido= "concluido", 
+cancelado = "cancelado", 
+rejeitado = "rejeitado"
 }

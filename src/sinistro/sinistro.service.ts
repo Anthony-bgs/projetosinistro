@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { sinistro } from './sinistro.interface';
-import { Constantes } from 'src/constantes'
+import { Constantes, Status_Sinistro } from 'src/constantes'
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { EmailService } from 'src/comunicacao/email.service';
@@ -15,10 +15,10 @@ export class Sinistro_Service {
   async create(createsinistro: sinistro): Promise<string> {
     const created = new this.sinistro_model(createsinistro);
     await created.save();
-    this.zap_service.sendWhatsappMessage(created.numero_telefone, `Novo sinistro registrado: ${created._id.toString()}`);
-    this.email_service.sendMail(created.responsavel_email_preenchimento,
-      'Registro de Sinistro',
-      `Seu sinistro foi registrado com sucesso. Referência: ${created._id.toString()}`)
+    // this.zap_service.sendWhatsappMessage(created.numero_telefone, `Novo sinistro registrado: ${created._id.toString()}`);
+    // this.email_service.sendMail(created.responsavel_email_preenchimento,
+    //   'Registro de Sinistro',
+    //   `Seu sinistro foi registrado com sucesso. Referência: ${created._id.toString()}`)
     return created._id.toString()
   }
   async find(_id: string): Promise<sinistro | null> {
@@ -33,5 +33,17 @@ export class Sinistro_Service {
     Data_Final.setMonth(Data_Final.getMonth() - 6);
     return this.sinistro_model.find({ data_preenchimento: { $gt: Data_Final, $lt: Data_Atual } })
   }
+  // Atualiza o status do sinistro de forma segura
+  async updateStatus(id: string, status: Status_Sinistro, usuarioId?: string): Promise<sinistro | null> {
+    // Busca o sinistro
+    const sinistroDoc = await this.sinistro_model.findById(id);
+    if (!sinistroDoc) {
+      throw new Error('Sinistro não encontrado');
+    }
+    // Salva status anterior para auditoria
+    const statusAnterior = sinistroDoc.status;
+    sinistroDoc.status = status;
+    await sinistroDoc.save();
+    return sinistroDoc;
+  }
 }
-

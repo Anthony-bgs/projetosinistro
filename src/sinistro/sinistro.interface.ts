@@ -1,3 +1,4 @@
+import { Status_Sinistro } from "src/constantes"
 
 export interface sinistro {
   tipo_documento: Tipo_de_documento,
@@ -12,6 +13,8 @@ export interface sinistro {
   responsavel_email_preenchimento: string,
   data_preenchimento: Date,
   documentos_anexo: string[]
+  status?: Status_Sinistro
+
 }
 
 export enum Tipo_de_documento {

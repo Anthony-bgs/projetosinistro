@@ -9,6 +9,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Usuario_Schema } from "src/usuario/usuario.schema";
 import { Usuario_Controller } from "src/usuario/usuario.controller";
 import { Usuario_Module } from "src/usuario/usuario.module";
+import { ComunicacaoModule } from "src/comunicacao/comunicacao.module";
 import { Autenticacao_Controller } from "./autenticacao.controller";
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -24,7 +25,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         signOptions: { expiresIn: '1h' },
       }),
     }),
-    Usuario_Module
+    Usuario_Module,
+    ComunicacaoModule
   ],
   controllers: [Autenticacao_Controller],
   providers: [JwtStrategy, Autenticacao_Service],
