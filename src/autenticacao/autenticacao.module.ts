@@ -11,6 +11,7 @@ import { Usuario_Controller } from "src/usuario/usuario.controller";
 import { Usuario_Module } from "src/usuario/usuario.module";
 import { ComunicacaoModule } from "src/comunicacao/comunicacao.module";
 import { Autenticacao_Controller } from "./autenticacao.controller";
+import { AuditoriaModule } from "src/auditoria/auditoria.module";
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -26,7 +27,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
     }),
     Usuario_Module,
-    ComunicacaoModule
+    ComunicacaoModule,
+    AuditoriaModule
   ],
   controllers: [Autenticacao_Controller],
   providers: [JwtStrategy, Autenticacao_Service],

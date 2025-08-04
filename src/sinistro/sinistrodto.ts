@@ -13,5 +13,5 @@ export interface Sinistro_Dto extends Document {
   responsavel_nome_preechimento: string,
   responsavel_email_preenchimento: string,
   data_preenchimento: Date,
-  documentos_anexo: string[]
+  documentos_anexo: any[]
 }

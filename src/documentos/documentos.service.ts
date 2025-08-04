@@ -8,6 +8,7 @@ export class DocumentosService {
 
   saveDocumento(id: string) {
     // aqui você vai adicionar lógica para salvar o idDocumento no banco de dados para rastreabilidade
+    
   }
 
   async getDocumentoPath(id: string): Promise<string | null> {

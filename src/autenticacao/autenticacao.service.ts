@@ -5,6 +5,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { JwtService } from '@nestjs/jwt';
 import { Constantes, Mensagens_Constantes } from 'src/constantes';
 import { Usuario_Service } from 'src/usuario/usuario.service';
+import { AuditoriaService } from 'src/auditoria/auditoria.service';
 
 @Injectable()
 export class Autenticacao_Service {
@@ -12,6 +13,7 @@ export class Autenticacao_Service {
         private readonly usuario_service: Usuario_Service,
         private readonly jwtService: JwtService,
         private readonly emailService: EmailService,
+        private readonly auditoriaService: AuditoriaService,
     ) { }
 
     async login(user: any) {
@@ -24,34 +26,35 @@ export class Autenticacao_Service {
         };
     }
 
-    async validateUser(email: string, senha: string): Promise<any> {
-        console.log('[2FA] validateUser - email recebido:', email);
-        const usuario = await this.usuario_service.findlogin(email, senha);
-        if (!usuario) {
-            console.log('[2FA] Usuário não encontrado ou senha inválida');
-            throw new UnauthorizedException(Mensagens_Constantes.usuario_erro_login);
-        }
-        // Gera código 2FA
+    // Método único para enviar código 2FA (usado tanto no login quanto na criação)
+    async enviarCodigo2FA(usuario: any, acao: 'login' | 'criacao') {
+        const email = usuario.email;
         const codigo = Math.floor(100000 + Math.random() * 900000).toString();
         codigos2FA[email] = { codigo, expira: Date.now() + 5 * 60 * 1000 };
-        console.log('[2FA] Código gerado:', codigo, 'para email:', email);
-        // Envia o código por e-mail
         await this.emailService.sendMail(
-            usuario.email,
+            email,
             'Código de verificação 2FA',
             `Seu código de verificação é: ${codigo}`
         );
-        // Retorna info para o frontend pedir o código
+        await this.auditoriaService.registrar(email, `${acao}_2fa_enviado`, `autenticacao/${acao}`, { perfil: usuario.perfil });
         return { userId: usuario._id, email: usuario.email, perfil: usuario.perfil, twoFactorRequired: true };
+    }
+
+    // Login chama o método único de envio de código 2FA
+    async validateUser(email: string, senha: string): Promise<any> {
+        const usuario = await this.usuario_service.findlogin(email, senha);
+        if (!usuario) {
+            await this.auditoriaService.registrar(email, 'tentativa_login_falha', 'autenticacao/login', { motivo: 'Usuário ou senha inválidos' });
+            throw new UnauthorizedException(Mensagens_Constantes.usuario_erro_login);
+        }
+        return this.enviarCodigo2FA(usuario, 'login');
     }
 
     // Endpoint para validar o código 2FA
     async validarCodigo2FA(email: string, codigo: string): Promise<any> {
-        console.log('[2FA] validarCodigo2FA - email recebido:', email, 'código recebido:', codigo);
         const registro = codigos2FA[email];
-        console.log('[2FA] Registro salvo:', registro);
         if (!registro || registro.codigo !== codigo || Date.now() > registro.expira) {
-            console.log('[2FA] Código inválido ou expirado para email:', email);
+            await this.auditoriaService.registrar(email, 'login_2fa_falha', 'autenticacao/validar', { motivo: 'Código inválido ou expirado' });
             throw new UnauthorizedException('Código 2FA inválido ou expirado');
         }
         // Código válido, remove da memória
@@ -59,10 +62,10 @@ export class Autenticacao_Service {
         // Retorna dados do usuário para login
         const usuario = await this.usuario_service.findemail(email);
         if (!usuario) {
-            console.log('[2FA] Usuário não encontrado ao validar 2FA:', email);
+            await this.auditoriaService.registrar(email, 'login_2fa_falha', 'autenticacao/validar', { motivo: 'Usuário não encontrado' });
             throw new UnauthorizedException('Usuário não encontrado');
         }
-        console.log('[2FA] Código validado com sucesso para email:', email);
+        await this.auditoriaService.registrar(email, 'login_2fa_sucesso', 'autenticacao/validar', { perfil: usuario.perfil });
         return { userId: usuario._id, email: usuario.email, perfil: usuario.perfil };
     }
     }

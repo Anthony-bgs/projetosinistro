@@ -1,4 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors, Request, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors, Request, BadRequestException, UploadedFiles } from '@nestjs/common';
+import { AnyFilesInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import * as path from 'path';
 import { Sinistro_Service } from './sinistro.service';
 import { Sinistro_Dto } from './sinistrodto';
 import { sinistro } from './sinistro.interface';
@@ -21,8 +25,21 @@ export class Sinistro_Controller {
   ) {}
 
   @Post("/")
-  async create(@Body() createsinistrodto: Sinistro_Dto): Promise<string> {
-    return this.appService.create(createsinistrodto)
+  @UseInterceptors(AnyFilesInterceptor({storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, cb) => {
+        const id = uuidv4();
+        const ext = path.extname(file.originalname);
+        cb(null, `${id}${ext}`);
+      }
+    })}))
+  async create(
+    @UploadedFiles() files: Array<any>,
+    @Body() createsinistrodto: Sinistro_Dto
+  ): Promise<string | Response> {
+    // Adiciona os arquivos ao DTO
+    createsinistrodto.documentos_anexo = files?.map(f => f.filename) || [];
+    return this.appService.create(createsinistrodto);
   }
 
   // Atualização segura do status do sinistro

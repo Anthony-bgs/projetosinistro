@@ -12,13 +12,17 @@ export class Sinistro_Service {
     @InjectModel("Sinistro") private readonly sinistro_model: Model<sinistro>,
     private readonly email_service: EmailService, private readonly zap_service: ZapService
   ) { }
-  async create(createsinistro: sinistro): Promise<string> {
+  async create(createsinistro: sinistro): Promise<string | Response> {
     const created = new this.sinistro_model(createsinistro);
     await created.save();
     // this.zap_service.sendWhatsappMessage(created.numero_telefone, `Novo sinistro registrado: ${created._id.toString()}`);
     // this.email_service.sendMail(created.responsavel_email_preenchimento,
     //   'Registro de Sinistro',
     //   `Seu sinistro foi registrado com sucesso. Referência: ${created._id.toString()}`)
+    return Response.json({
+      message: 'Sinistro registrado com sucesso',
+    });
+    // Retorna o ID do sinistro criado
     return created._id.toString()
   }
   async find(_id: string): Promise<sinistro | null> {
